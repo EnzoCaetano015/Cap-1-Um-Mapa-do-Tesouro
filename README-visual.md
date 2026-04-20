@@ -10,7 +10,7 @@ Acesse diretamente a simulação completa:
 
 ## 🧩 Visão Geral do Circuito
 
-![Circuito Geral](image)
+![Circuito Geral](img/image.png)
 
 ### Componentes identificados:
 
@@ -24,7 +24,7 @@ Acesse diretamente a simulação completa:
 
 ## 💻 Código e Simulação no Wokwi
 
-![Código e Simulação](image2)
+![Código e Simulação](img/image2.png)
 
 ### O que essa tela mostra:
 
