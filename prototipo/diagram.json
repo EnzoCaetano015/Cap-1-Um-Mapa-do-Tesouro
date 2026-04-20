@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "author": "Automated Agent",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-slide-switch",
+      "id": "swN",
+      "top": 159.8,
+      "left": -194.4,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-slide-switch",
+      "id": "swP",
+      "top": 159.8,
+      "left": -134.4,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-slide-switch",
+      "id": "swK",
+      "top": 159.8,
+      "left": -74.4,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht",
+      "top": -28.5,
+      "left": 167.4,
+      "attrs": { "humidity": "64.5", "temperature": "-30.4" }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr",
+      "top": -198.4,
+      "left": 106.4,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "relay",
+      "top": -115,
+      "left": 124.8,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    ["esp:TX", "$serialMonitor:RX", "", []],
+    ["esp:RX", "$serialMonitor:TX", "", []],
+    ["swN:1", "esp:GND.1", "black", []],
+    ["swN:2", "esp:13", "green", []],
+    ["swP:1", "esp:GND.2", "black", []],
+    ["swP:2", "esp:12", "green", []],
+    ["swK:1", "esp:GND.3", "black", []],
+    ["swK:2", "esp:14", "green", []],
+    ["dht:VCC", "esp:3V3", "red", []],
+    ["dht:SDA", "esp:4", "yellow", []],
+    ["dht:GND", "esp:GND.4", "black", []],
+    ["ldr:VCC", "esp:3V3", "red", []],
+    ["ldr:GND", "esp:GND.5", "black", []],
+    ["ldr:AO", "esp:34", "blue", []],
+    ["relay:VCC", "esp:5V", "red", []],
+    ["relay:GND", "esp:GND.6", "black", []],
+    ["relay:IN", "esp:26", "orange", []]
+  ],
+  "dependencies": {}
+}
