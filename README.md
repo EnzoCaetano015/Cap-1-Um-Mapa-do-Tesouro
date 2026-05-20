@@ -1,5 +1,7 @@
 # FarmTech Solutions — Fase 3
 
+![Logo do projeto](img/logo.png)
+
 ## Sistema de Irrigação Inteligente com Oracle, Python, Streamlit e ESP32
 
 Este projeto simula uma solução de agricultura de precisão para monitoramento de solo e tomada de decisão sobre irrigação. A proposta evolui a Fase 2, que utilizava sensores simulados no ESP32/Wokwi, para a Fase 3, adicionando persistência em banco de dados relacional Oracle, consultas SQL e uma dashboard em Python.
