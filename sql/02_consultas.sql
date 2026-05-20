@@ -1,0 +1,71 @@
+-- 1) Listagem de todos os registros importados
+SELECT
+    *
+FROM
+    FARMTECH_SENSOR_LEITURA
+ORDER BY
+    DATA_HORA;
+
+-- 2) Quantidade de leituras por status da irrigacao
+SELECT
+    STATUS_IRRIGACAO,
+    COUNT(*) AS TOTAL
+FROM
+    FARMTECH_SENSOR_LEITURA
+GROUP BY
+    STATUS_IRRIGACAO
+ORDER BY
+    STATUS_IRRIGACAO;
+
+-- 3) Medias de umidade, temperatura e pH
+SELECT
+    ROUND(AVG(UMIDADE), 2) AS MEDIA_UMIDADE,
+    ROUND(AVG(TEMPERATURA), 2) AS MEDIA_TEMPERATURA,
+    ROUND(AVG(PH), 2) AS MEDIA_PH
+FROM
+    FARMTECH_SENSOR_LEITURA;
+
+-- 4) Leituras consideradas criticas (umidade baixa ou pH fora da faixa)
+SELECT
+    *
+FROM
+    FARMTECH_SENSOR_LEITURA
+WHERE
+    UMIDADE < 30
+    OR PH < 5.5
+    OR PH > 7.5
+ORDER BY
+    DATA_HORA;
+
+-- 5) Relacao entre chuva e irrigacao
+SELECT
+    NIVEL_CHUVA,
+    STATUS_IRRIGACAO,
+    COUNT(*) AS TOTAL
+FROM
+    FARMTECH_SENSOR_LEITURA
+GROUP BY
+    NIVEL_CHUVA,
+    STATUS_IRRIGACAO
+ORDER BY
+    NIVEL_CHUVA,
+    STATUS_IRRIGACAO;
+
+-- 6) Media dos sensores por status da irrigacao
+SELECT
+    STATUS_IRRIGACAO,
+    ROUND(AVG(UMIDADE), 2) AS MEDIA_UMIDADE,
+    ROUND(AVG(TEMPERATURA), 2) AS MEDIA_TEMPERATURA,
+    ROUND(AVG(PH), 2) AS MEDIA_PH
+FROM
+    FARMTECH_SENSOR_LEITURA
+GROUP BY
+    STATUS_IRRIGACAO
+ORDER BY
+    STATUS_IRRIGACAO;
+
+-- 7) Total de registros importados
+SELECT
+    COUNT(*) AS TOTAL_REGISTROS
+FROM
+    FARMTECH_SENSOR_LEITURA;
