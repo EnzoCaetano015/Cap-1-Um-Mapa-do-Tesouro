@@ -437,6 +437,117 @@ Sugestão de ordem:
 
 ---
 
+# Evolução — Fase 4: Assistente Agrícola Inteligente
+
+A Fase 4 mantém a base construída na Fase 3 e adiciona uma camada de Inteligência Artificial aplicada aos dados agrícolas. O objetivo é transformar as leituras de sensores em previsões e recomendações de manejo.
+
+## Novos recursos adicionados
+
+- Pipeline de Machine Learning com Scikit-Learn.
+- Modelos de regressão para prever:
+  - umidade futura do solo;
+  - pH futuro do solo;
+  - produtividade estimada.
+- Avaliação dos modelos com MAE, MSE, RMSE e R².
+- Dashboard Streamlit atualizado com abas de monitoramento, métricas de ML e previsão interativa.
+- Recomendador agrícola em Python para sugerir irrigação, correção de pH e fertilização NPK.
+- Ingestão simulada de dados IoT em banco SQL local com SQLite.
+- Script SQL adicional para tabela Oracle de previsões de ML.
+
+## Arquivos adicionados na Fase 4
+
+```text
+ml/
+├── treinar_modelos.py
+└── recomendador.py
+
+database/
+└── ingestao_iot_sqlite.py
+
+models/
+└── arquivos .joblib gerados após treinamento
+
+relatorios/fase4/
+└── metricas_modelos.csv
+
+sql/
+└── 04_create_table_fase4_ml.sql
+```
+
+## Como treinar os modelos de regressão
+
+Execute na raiz do projeto:
+
+```bash
+python ml/treinar_modelos.py
+```
+
+Esse comando gera:
+
+```text
+data/sensores_fase4_ml.csv
+models/modelo_umidade_prevista.joblib
+models/modelo_ph_previsto.joblib
+models/modelo_produtividade_estimada.joblib
+relatorios/fase4/metricas_modelos.csv
+```
+
+## Como rodar o dashboard atualizado
+
+```bash
+streamlit run dashboard/src/dashboard.py
+```
+
+O dashboard possui três abas principais:
+
+1. **Monitoramento**: mantém os indicadores da Fase 3.
+2. **ML e métricas**: exibe métricas, correlações e tendências.
+3. **Previsão interativa**: permite informar dados do campo e gerar previsão em tempo real.
+
+## Como demonstrar a ingestão IoT em banco SQL local
+
+```bash
+python database/ingestao_iot_sqlite.py
+```
+
+O script lê o CSV da Fase 3 e popula o banco:
+
+```text
+database/farmtech_iot.db
+```
+
+Durante a execução, cada leitura é inserida e exibida no terminal, simulando ingestão automática de dados IoT.
+
+## Fluxo técnico da Fase 4
+
+```text
+Sensores/Wokwi ou CSV da Fase 3
+        ↓
+Banco de dados SQL / CSV estruturado
+        ↓
+Pipeline de Machine Learning com Scikit-Learn
+        ↓
+Modelos de regressão treinados
+        ↓
+Dashboard Streamlit
+        ↓
+Previsões e recomendações agrícolas
+```
+
+## Interpretação das recomendações
+
+O sistema analisa as previsões e sugere ações como:
+
+- ligar ou manter desligada a irrigação;
+- corrigir pH do solo;
+- aplicar fertilização NPK;
+- acompanhar risco produtivo;
+- adiar irrigação em caso de chuva forte prevista.
+
+Essa evolução transforma a solução da FarmTech em um protótipo de Agricultura Cognitiva, no qual os dados coletados no campo passam a apoiar decisões automáticas e inteligentes.
+
+---
+
 ## Conclusão
 
 O projeto demonstra uma solução didática de agricultura inteligente integrando sensores simulados, regra de decisão para irrigação, armazenamento relacional em Oracle, scripts Python e visualização em dashboard.

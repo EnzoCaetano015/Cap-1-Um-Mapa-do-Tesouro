@@ -1,0 +1,14 @@
+{
+  "alvo": "produtividade_estimada",
+  "modelo": "random_forest",
+  "features": [
+    "umidade",
+    "temperatura",
+    "ph",
+    "n",
+    "p",
+    "k",
+    "nivel_chuva",
+    "irrigacao_ligada"
+  ]
+}

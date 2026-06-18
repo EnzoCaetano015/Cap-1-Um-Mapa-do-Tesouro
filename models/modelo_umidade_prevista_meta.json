@@ -1,0 +1,14 @@
+{
+  "alvo": "umidade_prevista",
+  "modelo": "regressao_linear",
+  "features": [
+    "umidade",
+    "temperatura",
+    "ph",
+    "n",
+    "p",
+    "k",
+    "nivel_chuva",
+    "irrigacao_ligada"
+  ]
+}

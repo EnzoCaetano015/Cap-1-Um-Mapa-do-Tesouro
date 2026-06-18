@@ -1,5 +1,8 @@
-requests
+joblib
+numpy
 oracledb
 pandas
 python-dotenv
+requests
+scikit-learn
 streamlit

@@ -1,0 +1,7 @@
+alvo,modelo,MAE,MSE,RMSE,R2
+umidade_prevista,regressao_linear,1.6956,4.4557,2.1109,0.9155
+umidade_prevista,random_forest,2.2233,7.7957,2.7921,0.8522
+ph_previsto,regressao_linear,0.0988,0.0153,0.1238,0.941
+ph_previsto,random_forest,0.1128,0.0198,0.1407,0.9238
+produtividade_estimada,regressao_linear,6.0277,52.9375,7.2758,0.1806
+produtividade_estimada,random_forest,4.8053,35.4069,5.9504,0.4519
