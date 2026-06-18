@@ -1,24 +1,30 @@
-# FarmTech Solutions — Fase 3
+# FarmTech Solutions — Assistente Agrícola Inteligente
 
 ![Logo do projeto](img/logo.png)
 
-## Sistema de Irrigação Inteligente com Oracle, Python, Streamlit e ESP32
+## Sistema de irrigação inteligente com ESP32, Oracle, Python, Streamlit e Machine Learning
 
-Este projeto simula uma solução de agricultura de precisão para monitoramento de solo e tomada de decisão sobre irrigação. A proposta evolui a Fase 2, que utilizava sensores simulados no ESP32/Wokwi, para a Fase 3, adicionando persistência em banco de dados relacional Oracle, consultas SQL e uma dashboard em Python.
+Este projeto simula uma solução de agricultura de precisão para monitoramento de solo, apoio à decisão de irrigação e geração de recomendações agrícolas. A base do sistema vem das leituras simuladas do protótipo ESP32/Wokwi e foi evoluída com persistência em Oracle, consultas SQL, dashboard em Streamlit, ingestão local em SQLite e modelos de Machine Learning.
 
-O sistema trabalha com dados de umidade, temperatura, pH, nutrientes NPK, previsão de chuva e status da irrigação. A partir desses dados, é possível registrar leituras, consultar informações no banco e visualizar indicadores em uma dashboard.
-
----
-
-## Objetivo da atividade
-
-A atividade tem como objetivo explorar conceitos iniciais de banco de dados, usando os dados coletados/simulados pelos sensores da Fase 2 como base para importação em um banco relacional Oracle.
-
-Além disso, o projeto também apresenta uma dashboard em Python para visualização dos dados agrícolas.
+O sistema trabalha com umidade, temperatura, pH, nutrientes NPK, previsão de chuva, status da irrigação e sugestões de manejo. A partir desses dados, é possível registrar leituras, consultar informações no banco, visualizar indicadores, treinar modelos preditivos e gerar recomendações de irrigação, correção de solo e fertilização.
 
 ---
 
-## Arquitetura do projeto
+## Objetivo
+
+Construir um protótipo didático de agricultura inteligente que integra:
+
+- sensores simulados no ESP32/Wokwi;
+- regra de decisão para irrigação;
+- armazenamento e consultas em banco Oracle;
+- ingestão simulada de dados IoT em SQLite;
+- dashboard em Python com Streamlit;
+- modelos de regressão com Scikit-Learn;
+- recomendador agrícola baseado nas previsões geradas.
+
+---
+
+## Estrutura atual do projeto
 
 ```text
 .
@@ -29,33 +35,51 @@ Além disso, o projeto também apresenta uma dashboard em Python para visualiza�
 │       ├── dashboard.py
 │       └── importar_csv_oracle.py
 ├── data/
-│   └── sensores_fase2.csv
+│   ├── sensores_fase2.csv
+│   └── sensores_fase4_ml.csv
+├── database/
+│   └── ingestao_iot_sqlite.py
 ├── img/
+│   ├── logo.png
+│   ├── consultas-sql/
+│   │   ├── consulta-1.png
+│   │   ├── consulta-2.png
+│   │   ├── consulta-3.png
+│   │   ├── consulta-4.png
+│   │   ├── consulta-5.png
+│   │   ├── consulta-6.png
+│   │   └── consulta-7.png
 │   └── prototipo/
 │       ├── image.png
 │       └── image2.png
-├── prints/
-│   ├── print_01_tabela_criada.png
-│   ├── print_02_select_todos_registros.png
-│   ├── print_03_status_irrigacao.png
-│   ├── print_04_medias_sensores.png
-│   ├── print_05_leituras_criticas.png
-│   ├── print_06_dashboard_geral.png
-│   ├── print_07_dashboard_filtro_ligada.png
-│   └── print_08_api_clima_terminal.png
+├── ml/
+│   ├── recomendador.py
+│   └── treinar_modelos.py
+├── models/
+│   ├── modelo_ph_previsto.joblib
+│   ├── modelo_ph_previsto_meta.json
+│   ├── modelo_produtividade_estimada.joblib
+│   ├── modelo_produtividade_estimada_meta.json
+│   ├── modelo_umidade_prevista.joblib
+│   └── modelo_umidade_prevista_meta.json
 ├── prototipo-ESP32/
 │   ├── src/
 │   │   └── sketch.ino
 │   ├── diagram.json
 │   ├── platformio.ini
+│   ├── PROTOTIPO.md
 │   └── wokwi.toml
+├── relatorios/
+│   └── fase4/
+│       └── metricas_modelos.csv
 ├── sql/
 │   ├── 01_create_table.sql
 │   ├── 02_consultas.sql
-│   └── 03_script_completo_oracle.sql
+│   ├── 03_script_completo_oracle.sql
+│   ├── 04_create_table_fase4_ml.sql
+│   └── CONSULTAS_FARMTECH.md
 ├── .env.example
 ├── README.md
-├── CONSULTAS.md
 └── requirements.txt
 ```
 
@@ -65,15 +89,21 @@ Além disso, o projeto também apresenta uma dashboard em Python para visualiza�
 
 | Pasta/arquivo | Função |
 |---|---|
-| `api-clima/clima.py` | Consulta previsão de chuva usando API externa e retorna um nível de chuva para uso no ESP32. |
-| `dashboard/src/dashboard.py` | Dashboard em Streamlit para visualizar os dados da Fase 2. |
-| `dashboard/src/importar_csv_oracle.py` | Script Python responsável por importar o CSV para o banco Oracle. |
-| `data/sensores_fase2.csv` | Base de dados usada na importação para o Oracle e na dashboard. |
+| `api-clima/clima.py` | Consulta previsão de chuva por latitude e longitude e converte o resultado para o valor usado no ESP32. |
+| `dashboard/src/dashboard.py` | Dashboard Streamlit com monitoramento, métricas de ML e previsão interativa. |
+| `dashboard/src/importar_csv_oracle.py` | Importa `data/sensores_fase2.csv` para a tabela Oracle `FARMTECH_SENSOR_LEITURA`. |
+| `data/sensores_fase2.csv` | Base original de leituras simuladas dos sensores. |
+| `data/sensores_fase4_ml.csv` | Dataset gerado para treinamento e análise de Machine Learning. |
+| `database/ingestao_iot_sqlite.py` | Simula ingestão de dados IoT em um banco SQLite local. |
+| `img/consultas-sql/` | Evidências visuais das consultas SQL. |
 | `img/prototipo/` | Imagens do protótipo ESP32/Wokwi. |
-| `prints/` | Pasta para salvar os prints das consultas SQL, dashboard e testes. |
-| `prototipo-ESP32/` | Código e configuração da simulação do ESP32 no Wokwi/PlatformIO. |
-| `sql/` | Scripts SQL para criação da tabela, carga de exemplo e consultas. |
-| `.env.example` | Modelo das variáveis de ambiente usadas na conexão Oracle. |
+| `ml/treinar_modelos.py` | Gera dataset sintético, treina modelos de regressão e salva métricas. |
+| `ml/recomendador.py` | Gera recomendações de manejo a partir das previsões dos modelos. |
+| `models/` | Modelos `.joblib` treinados e metadados `.json`. |
+| `prototipo-ESP32/` | Código, configuração e documentação da simulação ESP32. |
+| `relatorios/fase4/metricas_modelos.csv` | Métricas MAE, MSE, RMSE e R² dos modelos treinados. |
+| `sql/` | Scripts de criação de tabelas, consultas Oracle e documentação das consultas. |
+| `.env.example` | Modelo das variáveis de ambiente para conexão Oracle. |
 | `requirements.txt` | Dependências Python do projeto. |
 
 ---
@@ -82,7 +112,11 @@ Além disso, o projeto também apresenta uma dashboard em Python para visualiza�
 
 - Python
 - Pandas
+- NumPy
 - Streamlit
+- Scikit-Learn
+- Joblib
+- SQLite
 - Oracle Database
 - Oracle SQL Developer
 - `oracledb`
@@ -93,15 +127,15 @@ Além disso, o projeto também apresenta uma dashboard em Python para visualiza�
 
 ---
 
-## Base de dados utilizada
+## Base de dados
 
-O arquivo principal usado como base é:
+O arquivo principal de entrada é:
 
 ```text
 data/sensores_fase2.csv
 ```
 
-Ele contém as seguintes colunas:
+Ele contém as leituras simuladas usadas no Oracle, no dashboard e como base para geração do dataset de ML.
 
 | Coluna | Descrição |
 |---|---|
@@ -116,13 +150,19 @@ Ele contém as seguintes colunas:
 | `status_irrigacao` | Status da bomba de irrigação: `LIGADA` ou `DESLIGADA`. |
 | `sugestao` | Recomendação baseada nas condições simuladas. |
 
+O treinamento de ML também gera:
+
+```text
+data/sensores_fase4_ml.csv
+```
+
+Esse arquivo adiciona variáveis-alvo como `umidade_prevista`, `ph_previsto` e `produtividade_estimada`.
+
 ---
 
-## Regras de irrigação usadas no projeto
+## Regras de irrigação
 
 A decisão de irrigação considera umidade, pH, nutrientes NPK e previsão de chuva.
-
-Regras principais:
 
 ```text
 Chuva forte:
@@ -137,6 +177,8 @@ Sem chuva:
 Solo inadequado:
 - A irrigação permanece desligada até ajuste de pH ou nutrientes.
 ```
+
+Na Fase 4, o recomendador também considera previsões de umidade, pH e produtividade para sugerir irrigação, correção de pH, fertilização NPK e nível de risco produtivo.
 
 ---
 
@@ -166,7 +208,7 @@ pip install -r requirements.txt
 
 ---
 
-## Configuração do banco Oracle
+## Configuração do Oracle
 
 Crie um arquivo `.env` na raiz do projeto com base no `.env.example`:
 
@@ -184,81 +226,107 @@ ORACLE_PASSWORD=sua_senha
 ORACLE_DSN=oracle.fiap.com.br:1521/orcl
 ```
 
-Substitua os dados pelos acessos fornecidos pela FIAP.
-
 ---
 
-## Como criar a tabela no Oracle
+## Criar tabela e importar dados no Oracle
 
-Abra o Oracle SQL Developer, conecte no banco e execute:
+No Oracle SQL Developer, execute:
 
 ```text
 sql/03_script_completo_oracle.sql
 ```
 
-Esse script faz:
-
-1. Remove a tabela anterior, caso exista.
-2. Cria a tabela `FARMTECH_SENSOR_LEITURA`.
-3. Cria constraints de validação.
-4. Insere registros de exemplo.
-5. Executa `COMMIT`.
-6. Executa consultas de validação.
-
-Tabela criada:
+Esse script cria a tabela principal:
 
 ```sql
 FARMTECH_SENSOR_LEITURA
 ```
 
----
-
-## Como importar o CSV para o Oracle
-
-Após criar a tabela, execute:
+Depois, para importar o CSV da Fase 2 para o Oracle:
 
 ```bash
 python dashboard/src/importar_csv_oracle.py
 ```
 
-Resultado esperado no terminal:
+Resultado esperado:
 
 ```text
 Importacao concluida. Total de registros: 10
 ```
 
-Depois, no SQL Developer, valide com:
-
-```sql
-SELECT COUNT(*) AS TOTAL_REGISTROS
-FROM FARMTECH_SENSOR_LEITURA;
-```
-
----
-
-## Atenção ao caminho do CSV
-
-Como os scripts estão dentro de `dashboard/src/` e o CSV está em `data/`, o caminho correto deve subir duas pastas.
-
-Nos arquivos:
+Para a tabela de previsões da Fase 4, use:
 
 ```text
-dashboard/src/dashboard.py
-dashboard/src/importar_csv_oracle.py
+sql/04_create_table_fase4_ml.sql
 ```
 
-Use:
+Esse script cria:
 
-```python
-base_dir = Path(__file__).resolve().parents[2]
-caminho_csv = base_dir / "data" / "sensores_fase2.csv"
+```sql
+FARMTECH_ML_PREVISAO
 ```
-
-Se estiver como `parents[1]`, o Python vai procurar o CSV em `dashboard/data/`, que não existe na arquitetura atual.
 
 ---
 
-## Como executar a dashboard
+## Consultas SQL
+
+As consultas principais estão em:
+
+```text
+sql/02_consultas.sql
+```
+
+A documentação com explicação e imagens está em:
+
+```text
+sql/CONSULTAS_FARMTECH.md
+```
+
+As evidências visuais ficam em:
+
+```text
+img/consultas-sql/
+```
+
+---
+
+## Treinar os modelos de Machine Learning
+
+Execute na raiz do projeto:
+
+```bash
+python ml/treinar_modelos.py
+```
+
+Esse comando:
+
+1. Lê `data/sensores_fase2.csv`.
+2. Gera `data/sensores_fase4_ml.csv`.
+3. Treina modelos para prever umidade futura, pH futuro e produtividade estimada.
+4. Salva os modelos em `models/`.
+5. Salva as métricas em `relatorios/fase4/metricas_modelos.csv`.
+
+Arquivos gerados/atualizados:
+
+```text
+data/sensores_fase4_ml.csv
+models/modelo_umidade_prevista.joblib
+models/modelo_ph_previsto.joblib
+models/modelo_produtividade_estimada.joblib
+models/*_meta.json
+relatorios/fase4/metricas_modelos.csv
+```
+
+As métricas avaliadas são:
+
+- MAE;
+- MSE;
+- RMSE;
+- R².
+
+---
+
+## Rodar a dashboard
 
 Execute:
 
@@ -272,30 +340,53 @@ O Streamlit abrirá no navegador, normalmente em:
 http://localhost:8501
 ```
 
-A dashboard apresenta:
+A dashboard possui três abas:
 
-- média de umidade;
-- média de temperatura;
-- média de pH;
-- total de leituras;
-- quantidade de registros com irrigação ligada;
-- gráfico de umidade ao longo do tempo;
-- gráfico de pH ao longo do tempo;
-- gráfico de presença de P e K;
-- gráfico de status da irrigação;
-- tabela com sugestões de irrigação.
+| Aba | Conteúdo |
+|---|---|
+| `Monitoramento` | Indicadores da base de sensores, gráficos de umidade, pH, presença de P/K e tabela de sugestões. |
+| `ML e métricas` | Métricas dos modelos, correlação entre variáveis e tendência de produtividade. |
+| `Previsão interativa` | Formulário com sliders/selects para gerar previsões e recomendações em tempo real. |
 
-Também existe um filtro por status:
+Se os modelos ainda não existirem, execute primeiro:
 
-```text
-Todos
-LIGADA
-DESLIGADA
+```bash
+python ml/treinar_modelos.py
 ```
 
 ---
 
-## Como testar a API de clima
+## Ingestão IoT com SQLite
+
+Para simular ingestão local de leituras IoT em banco SQL:
+
+```bash
+python database/ingestao_iot_sqlite.py
+```
+
+O script lê:
+
+```text
+data/sensores_fase2.csv
+```
+
+E cria/popula:
+
+```text
+database/farmtech_iot.db
+```
+
+A tabela local criada é:
+
+```sql
+leituras_iot
+```
+
+Durante a execução, cada leitura é inserida e exibida no terminal, simulando uma entrada contínua de dados.
+
+---
+
+## API de clima
 
 Execute:
 
@@ -317,7 +408,7 @@ Resultado da previsão: SEM CHUVA / CHUVA FRACA/MODERADA / CHUVA FORTE
 VALOR PARA DIGITAR NO SERIAL DO WOKWI: 0, 1 ou 2
 ```
 
-Esse valor pode ser usado no Monitor Serial do ESP32:
+Valores usados no Monitor Serial do ESP32:
 
 | Valor | Significado |
 |---|---|
@@ -327,9 +418,9 @@ Esse valor pode ser usado no Monitor Serial do ESP32:
 
 ---
 
-## Como testar o protótipo ESP32
+## Protótipo ESP32
 
-Abra a pasta:
+A pasta do protótipo é:
 
 ```text
 prototipo-ESP32/
@@ -352,204 +443,73 @@ No Monitor Serial, digite:
 2 = chuva forte
 ```
 
-O sistema deve mostrar no serial:
+A documentação visual do circuito está em:
 
-- chuva prevista;
-- umidade;
-- temperatura;
-- pH;
-- status de N, P e K;
-- situação do solo;
-- status da bomba.
+```text
+prototipo-ESP32/PROTOTIPO.md
+```
 
 ---
 
-## Consultas SQL
-
-As consultas principais estão documentadas em:
+## Fluxo técnico
 
 ```text
-CONSULTAS.md
-```
-
-E o arquivo SQL original está em:
-
-```text
-sql/02_consultas.sql
-```
-
-Use essas consultas para gerar os prints obrigatórios da atividade.
-
----
-
-## Prints recomendados
-
-Salve os prints na pasta `prints/` com os seguintes nomes:
-
-```text
-print_01_tabela_criada.png
-print_02_select_todos_registros.png
-print_03_status_irrigacao.png
-print_04_medias_sensores.png
-print_05_leituras_criticas.png
-print_06_dashboard_geral.png
-print_07_dashboard_filtro_ligada.png
-print_08_api_clima_terminal.png
-```
-
-Esses prints devem ser referenciados no `CONSULTAS.md` e podem ser usados no relatório final.
-
----
-
-## Roteiro sugerido para teste completo
-
-1. Abrir o projeto no VS Code.
-2. Criar e ativar o ambiente virtual.
-3. Instalar dependências com `pip install -r requirements.txt`.
-4. Configurar o `.env` com os dados do Oracle.
-5. Rodar `sql/03_script_completo_oracle.sql` no Oracle SQL Developer.
-6. Executar `python dashboard/src/importar_csv_oracle.py`.
-7. Rodar consultas do arquivo `sql/02_consultas.sql`.
-8. Tirar prints das consultas.
-9. Executar `streamlit run dashboard/src/dashboard.py`.
-10. Tirar prints da dashboard.
-11. Executar `python api-clima/clima.py`.
-12. Testar o valor retornado no Monitor Serial do ESP32.
-
----
-
-## Roteiro sugerido para vídeo
-
-Tempo máximo: 5 minutos.
-
-Sugestão de ordem:
-
-1. Apresentar rapidamente o objetivo do projeto.
-2. Mostrar a estrutura de pastas no VS Code.
-3. Mostrar o arquivo `data/sensores_fase2.csv`.
-4. Mostrar o script SQL criando a tabela no Oracle.
-5. Rodar uma consulta no SQL Developer.
-6. Executar o script de importação Python.
-7. Abrir a dashboard Streamlit.
-8. Mostrar gráficos e filtro de irrigação.
-9. Executar a API de clima.
-10. Mostrar rapidamente o protótipo ESP32/Wokwi.
-
----
-
-# Evolução — Fase 4: Assistente Agrícola Inteligente
-
-A Fase 4 mantém a base construída na Fase 3 e adiciona uma camada de Inteligência Artificial aplicada aos dados agrícolas. O objetivo é transformar as leituras de sensores em previsões e recomendações de manejo.
-
-## Novos recursos adicionados
-
-- Pipeline de Machine Learning com Scikit-Learn.
-- Modelos de regressão para prever:
-  - umidade futura do solo;
-  - pH futuro do solo;
-  - produtividade estimada.
-- Avaliação dos modelos com MAE, MSE, RMSE e R².
-- Dashboard Streamlit atualizado com abas de monitoramento, métricas de ML e previsão interativa.
-- Recomendador agrícola em Python para sugerir irrigação, correção de pH e fertilização NPK.
-- Ingestão simulada de dados IoT em banco SQL local com SQLite.
-- Script SQL adicional para tabela Oracle de previsões de ML.
-
-## Arquivos adicionados na Fase 4
-
-```text
-ml/
-├── treinar_modelos.py
-└── recomendador.py
-
-database/
-└── ingestao_iot_sqlite.py
-
-models/
-└── arquivos .joblib gerados após treinamento
-
-relatorios/fase4/
-└── metricas_modelos.csv
-
-sql/
-└── 04_create_table_fase4_ml.sql
-```
-
-## Como treinar os modelos de regressão
-
-Execute na raiz do projeto:
-
-```bash
-python ml/treinar_modelos.py
-```
-
-Esse comando gera:
-
-```text
-data/sensores_fase4_ml.csv
-models/modelo_umidade_prevista.joblib
-models/modelo_ph_previsto.joblib
-models/modelo_produtividade_estimada.joblib
-relatorios/fase4/metricas_modelos.csv
-```
-
-## Como rodar o dashboard atualizado
-
-```bash
-streamlit run dashboard/src/dashboard.py
-```
-
-O dashboard possui três abas principais:
-
-1. **Monitoramento**: mantém os indicadores da Fase 3.
-2. **ML e métricas**: exibe métricas, correlações e tendências.
-3. **Previsão interativa**: permite informar dados do campo e gerar previsão em tempo real.
-
-## Como demonstrar a ingestão IoT em banco SQL local
-
-```bash
-python database/ingestao_iot_sqlite.py
-```
-
-O script lê o CSV da Fase 3 e popula o banco:
-
-```text
-database/farmtech_iot.db
-```
-
-Durante a execução, cada leitura é inserida e exibida no terminal, simulando ingestão automática de dados IoT.
-
-## Fluxo técnico da Fase 4
-
-```text
-Sensores/Wokwi ou CSV da Fase 3
+Sensores simulados no ESP32/Wokwi
         ↓
-Banco de dados SQL / CSV estruturado
+CSV estruturado em data/sensores_fase2.csv
+        ↓
+Oracle para persistência e consultas SQL
+        ↓
+SQLite para simulação de ingestão IoT local
         ↓
 Pipeline de Machine Learning com Scikit-Learn
         ↓
-Modelos de regressão treinados
+Modelos treinados em models/
         ↓
 Dashboard Streamlit
         ↓
 Previsões e recomendações agrícolas
 ```
 
-## Interpretação das recomendações
+---
 
-O sistema analisa as previsões e sugere ações como:
+## Roteiro sugerido de teste completo
 
-- ligar ou manter desligada a irrigação;
-- corrigir pH do solo;
-- aplicar fertilização NPK;
-- acompanhar risco produtivo;
-- adiar irrigação em caso de chuva forte prevista.
+1. Criar e ativar o ambiente virtual.
+2. Instalar dependências com `pip install -r requirements.txt`.
+3. Configurar o `.env` com os dados do Oracle.
+4. Executar `sql/03_script_completo_oracle.sql` no Oracle SQL Developer.
+5. Executar `python dashboard/src/importar_csv_oracle.py`.
+6. Rodar as consultas de `sql/02_consultas.sql`.
+7. Conferir a documentação em `sql/CONSULTAS_FARMTECH.md`.
+8. Executar `python ml/treinar_modelos.py`.
+9. Executar `python database/ingestao_iot_sqlite.py`.
+10. Executar `streamlit run dashboard/src/dashboard.py`.
+11. Testar a aba `Previsão interativa`.
+12. Executar `python api-clima/clima.py`.
+13. Testar o valor retornado no Monitor Serial do ESP32.
 
-Essa evolução transforma a solução da FarmTech em um protótipo de Agricultura Cognitiva, no qual os dados coletados no campo passam a apoiar decisões automáticas e inteligentes.
+---
+
+## Roteiro sugerido para vídeo
+
+Tempo máximo sugerido: 5 minutos.
+
+1. Apresentar o objetivo do projeto.
+2. Mostrar a estrutura de pastas atual.
+3. Mostrar `data/sensores_fase2.csv` e `data/sensores_fase4_ml.csv`.
+4. Mostrar o protótipo ESP32/Wokwi e a lógica de chuva no Serial.
+5. Mostrar a criação/importação da tabela Oracle.
+6. Mostrar consultas SQL e imagens em `img/consultas-sql/`.
+7. Treinar os modelos com `python ml/treinar_modelos.py`.
+8. Mostrar as métricas em `relatorios/fase4/metricas_modelos.csv`.
+9. Rodar a ingestão SQLite.
+10. Abrir a dashboard Streamlit e demonstrar as três abas.
 
 ---
 
 ## Conclusão
 
-O projeto demonstra uma solução didática de agricultura inteligente integrando sensores simulados, regra de decisão para irrigação, armazenamento relacional em Oracle, scripts Python e visualização em dashboard.
+O projeto demonstra uma solução integrada de agricultura inteligente, conectando sensores simulados, regra de decisão de irrigação, armazenamento relacional em Oracle, ingestão SQL local, Machine Learning e visualização em dashboard.
 
-A entrega atende aos pontos principais da atividade: uso de dados da Fase 2, importação para banco Oracle, consultas SQL com prints, códigos Python, documentação em Markdown e demonstração funcional por vídeo.
+A versão atual vai além do monitoramento básico: ela usa os dados agrícolas para prever condições futuras, estimar produtividade e sugerir ações de manejo, formando um protótipo de assistente agrícola inteligente.
